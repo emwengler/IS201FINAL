@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quordle Clone</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            overflow-y: auto;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 28px;
+            white-space: nowrap;
+        }
+        .grids {
+            display: grid;
+            grid-template-columns: repeat(2, auto);
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 50px);
+            grid-template-rows: repeat(6, 50px);
+            gap: 5px;
+        }
+        .tile {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #ccc;
+            font-size: 24px;
+            text-align: center;
+            line-height: 50px;
+            text-transform: uppercase;
+        }
+        .correct {
+            background-color: #6aaa64;
+            color: white;
+        }
+        .present {
+            background-color: #c9b458;
+            color: white;
+        }
+        .absent {
+            background-color: #787c7e;
+            color: white;
+        }
+        input {
+            padding: 10px;
+            margin-top: 15px;
+            width: 80%;
+            font-size: 16px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #5a67d8;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #434190;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quordle Clone</h1>
+        <div class="grids">
+            <div class="grid" id="grid-0"></div>
+            <div class="grid" id="grid-1"></div>
+            <div class="grid" id="grid-2"></div>
+            <div class="grid" id="grid-3"></div>
+        </div>
+        <input type="text" id="guessInput" maxlength="5" placeholder="Enter 5-letter word">
+        <button onclick="submitGuess()">Submit</button>
+        <button onclick="restartGame()">Restart</button>
+    </div>
+
+    <script>
+        const targetWords = ["crane", "flint", "spark", "glide"];
+        const grids = [
+            document.getElementById("grid-0"),
+            document.getElementById("grid-1"),
+            document.getElementById("grid-2"),
+            document.getElementById("grid-3")
+        ];
+
+        function createGrids() {
+            grids.forEach((grid, gridIndex) => {
+                grid.innerHTML = "";
+                for (let i = 0; i < 30; i++) { // 6 rows * 5 tiles
+                    const tile = document.createElement("div");
+                    tile.className = "tile";
+                    tile.id = `grid${gridIndex}-tile${i}`;
+                    grid.appendChild(tile);
+                }
+            });
+        }
+
+        let currentRow = 0;
+
+        function submitGuess() {
+            const guess = document.getElementById("guessInput").value.toLowerCase().trim();
+            if (guess.length !== 5) {
+                alert("Please enter a 5-letter word.");
+                return;
+            }
+
+            grids.forEach((grid, gridIndex) => {
+                checkWord(targetWords[gridIndex], guess, gridIndex);
+            });
+            currentRow++;
+            document.getElementById("guessInput").value = "";
+            if (currentRow === 6) {
+                alert("Game Over!");
+            }
+        }
+
+        function checkWord(target, guess, gridIndex) {
+            for (let i = 0; i < 5; i++) {
+                const tileIndex = currentRow * 5 + i;
+                const tile = document.getElementById(`grid${gridIndex}-tile${tileIndex}`);
+                tile.textContent = guess[i];
+                if (guess[i] === target[i]) {
+                    tile.classList.add("correct");
+                } else if (target.includes(guess[i])) {
+                    tile.classList.add("present");
+                } else {
+                    tile.classList.add("absent");
+                }
+            }
+        }
+
+        function restartGame() {
+            currentRow = 0;
+            createGrids();
+            document.getElementById("guessInput").value = "";
+        }
+
+        createGrids();
+    </script>
+</body>
+</html>

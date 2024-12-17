@@ -1,0 +1,26 @@
+.video {
+    text-align: center;
+    border-width: 5px;
+    border-style: solid;
+    padding: 10px;
+}
+
+.background {
+    background-color:burlywood;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.reasonswhy {
+    text-align: right;
+    font: size 15px;
+}
+
+.footer {
+    text-align: center;
+    color: lightslategrey;
+    font-size: 10px;
+}
+
+.center {
+    text-align: center;
+}
